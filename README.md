@@ -29,4 +29,4 @@ We start with a simple baseline model which for a given day just predicts the sa
 We train a couple of other (univariate) models and see if we can beat the baseline. Options here are classic ML models for forecasting (e.g. XGBoost) as well a deep learning ones (Lag-Llama).
 
 ### Going multivariate: adding temperature forecast
-We go on to include the next day temperature forecast
+We go on to include the next day temperature forecast and see if we can get any better.
