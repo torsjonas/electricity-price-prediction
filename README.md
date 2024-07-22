@@ -1,4 +1,4 @@
-# electricity-price-prediction
+# Electricity price prediction
 Fiddling with time series data and models for predicting next day electricity price. I had been thinking about doing some time series modelleing related to the energy sector and recently read a Medium article on time series forecasting that inspired me to get started (see https://towardsdatascience.com/forecasting-in-the-age-of-foundation-models-8cd4eea0079d).
 
 ## About this repository
@@ -8,19 +8,27 @@ This repository is a toy project to collect and prepare some datasets that could
 ### Collect datasets
 #### Download historic electricity price data for one region of Sweden.
 
-Hourly day ahead price will be used as a proxy for the actual price. The day ahead market is describes as:
+Hourly day ahead price is used as a proxy for the actual price. The day ahead market is describes as:
 "In the day-ahead market customers can sell or buy energy for the next 24 hours in a closed auction. Orders are matched to maximize social welfare while taking network constraints provided by transmission system operators into consideration."
-https://www.nordpoolgroup.com/en/the-power-market/Day-ahead-market/
+https://www.nordpoolgroup.com/en/market-data12/Dayahead/Area-Prices/SE/Hourly/
 
 A couple of years hourly day ahead price (EUR) for Sweden in electricity price zone S04 (southern Sweden, where price volatility is high due to e.g. locality and energy infrastructure bottlenecks) was manually downloaded from Nordpool website https://www.nordpoolgroup.com/en/market-data12/Dayahead/Area-Prices/ALL1/Hourly/?dd=SE4&view=table
 
-These files, containing xml tables, will be processed and merged into a single csv file before training.
-See `process-raw-electricity-data.py` for the processing script, and `data/processed/processed_day_ahead_prices.csv` for the result csv file.
+These files, containing xml tables, are processed (impute missing values etc) and merged into a single csv file before training.
+See `src/data_preparation/process_raw_electricity_data.py` for the processing script, and `data/processed/processed_day_ahead_prices.csv` for the result csv file.
 
 For those interested, the below image shows the location of the SE04 price zone (https://www.energyprices.eu/electricity/sweden-south)
 ![SE04](/data/images/se04-sweden-south-electricity-price-zone.png)
 
 #### Download historic temperature data for that region.
+
+Hourly mean temperature in the largest city in the region was downloaded from https://www.temperatur.nu/nobeltorget_malmo.
+
+This csv file is processed (impute missing values etc) before training. See `src/data_preparation/process_raw_temperature_data.py` for the processing script, and `data/processed/temperature.csv` for the result csv file.
+
+### Initial data sanity checks
+
+A first look at the processed data with some basic data sanity checks can be found here `notebooks/data_checks.ipynb`
 
 ### Baseline: "Same price" predictor
 We start with a simple baseline model which for a given day just predicts the same price for the next day.
