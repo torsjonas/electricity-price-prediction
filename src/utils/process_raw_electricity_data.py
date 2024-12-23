@@ -43,6 +43,9 @@ df.drop_duplicates(inplace=True)
 df["date"] = df["date"].apply(lambda x: datetime.strptime(x, "%d-%m-%Y").date())
 df = df[["date", "hour", "price"]]
 
+print("Excluding day and hour duplicates (by keeping last)")
+df = df.drop_duplicates(subset=["date", "hour"], keep="last")
+
 df_na_rows_for_dates_with_missing_data = get_na_value_for_missing_data(df)
 print(
     f"Number of added na value rows due to missing hourly data (for later imputing): {len(df_na_rows_for_dates_with_missing_data)}"
@@ -61,4 +64,6 @@ print("Imputing missing values with the previous value.")
 # so lets assume its not a big issue)
 df["price"] = df["price"].bfill()
 
-df.to_csv(f"{cwd}/data/processed/day_ahead_price.csv", index=False)
+output_path = f"{cwd}/data/processed/day_ahead_price.csv"
+print("Saving processed data to: ", output_path)
+df.to_csv(output_path, index=False, sep=";")

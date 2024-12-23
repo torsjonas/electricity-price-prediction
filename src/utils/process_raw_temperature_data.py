@@ -29,13 +29,12 @@ print(f"Percent missing values in temperature column: {temperature_num_na / len(
 print("Imputing missing values with the previous value.")
 df["temperature"] = df["temperature"].bfill()
 
-# exclude duplicate data point for 2022-10-30 hour 2 in the raw data
-print("Excluding duplicate data point for 2022-10-30 hour 2 in the raw data.")
-df = df.drop(
-    (df[
-        (df['date'] == datetime.strptime("2022-10-30", "%Y-%m-%d").date()) & 
-        (df['hour'] == 2)
-    ].index)[0]
-)
+# exclude duplicate data points. One source of duplicates is daylight savings.
+# For example 2022-10-30 hour 2 in the raw data. Daylight savings time ends on this date.
+# Sunday, 30 October 2022, 03:00:00 clocks were turned backward 1 hour to 02:00:00 instead.
+print("Excluding day and hour duplicates (by keeping last)")
+df = df.drop_duplicates(subset=["date", "hour"], keep="last")
 
-df.to_csv(f"{cwd}/data/processed/temperature.csv", index=False)
+output_path = f"{cwd}/data/processed/temperature.csv"
+print("Saving processed temperature data to: ", output_path)
+df.to_csv(output_path, index=False, sep=";")

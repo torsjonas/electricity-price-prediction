@@ -5,3 +5,5 @@ dependencies:
   - python=3.11
   - scikit-learn
   - seaborn
+  - polars
+  - pyarrow
