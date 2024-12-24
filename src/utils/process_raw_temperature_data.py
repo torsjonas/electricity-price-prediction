@@ -1,4 +1,5 @@
 from datetime import datetime
+import os
 import pathlib
 import pandas as pd
 from missing_data_detection import get_na_value_for_missing_data
@@ -43,6 +44,10 @@ df["ds"] = df.apply(
     axis=1,
 )
 df = df[["ds", "temperature"]]
+
+processed_dir = f"{cwd}/data/processed"
+if not os.path.exists(processed_dir):
+    os.makedirs(processed_dir)
 
 output_path = f"{cwd}/data/processed/temperature.csv"
 print("Saving processed temperature data to: ", output_path)

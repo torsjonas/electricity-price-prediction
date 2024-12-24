@@ -70,9 +70,11 @@ df["ds"] = df.apply(
     ),
     axis=1,
 )
-
-
 df = df[["ds", "price"]]
+
+processed_dir = f"{cwd}/data/processed"
+if not os.path.exists(processed_dir):
+    os.makedirs(processed_dir)
 
 output_path = f"{cwd}/data/processed/day_ahead_price.csv"
 print("Saving processed data to: ", output_path)
