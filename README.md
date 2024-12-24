@@ -18,7 +18,7 @@ These files, containing xml tables, are processed (impute missing values etc) an
 See `src/utils/process_raw_electricity_data.py` for the processing script, and `data/processed/processed_day_ahead_prices.csv` for the result csv file.
 
 The below image shows the location of the SE04 price zone (https://www.energyprices.eu/electricity/sweden-south)
-![SE04](/data/images/se04-sweden-south-electricity-price-zone.png)
+![SE04](/img/images/se04-sweden-south-electricity-price-zone.png)
 
 #### Download historic temperature data for that region.
 

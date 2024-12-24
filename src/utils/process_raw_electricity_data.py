@@ -6,7 +6,6 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from missing_data_detection import get_na_value_for_missing_data
 
-
 def file_to_pandas_dataframe(file_path: str) -> pd.DataFrame:
     with open(file_path, "r") as f:
         soup = BeautifulSoup(f.read(), features="html.parser")
@@ -43,7 +42,7 @@ df.drop_duplicates(inplace=True)
 df["date"] = df["date"].apply(lambda x: datetime.strptime(x, "%d-%m-%Y").date())
 df = df[["date", "hour", "price"]]
 
-print("Excluding day and hour duplicates (by keeping last)")
+print("Excluding date hour duplicates (by keeping last)")
 df = df.drop_duplicates(subset=["date", "hour"], keep="last")
 
 df_na_rows_for_dates_with_missing_data = get_na_value_for_missing_data(df)
@@ -63,6 +62,17 @@ print("Imputing missing values with the previous value.")
 # impute missing values with the previous value (there are 16 missing values,
 # so lets assume its not a big issue)
 df["price"] = df["price"].bfill()
+# apply a lambda function to every row of the dataframe to convert date and hour to a datetime object
+df["ds"] = df.apply(
+    lambda row: datetime.strptime(
+        "{} {:02}:00:00".format(row["date"], row["hour"]),
+        "%Y-%m-%d %H:%M:%S",
+    ),
+    axis=1,
+)
+
+
+df = df[["ds", "price"]]
 
 output_path = f"{cwd}/data/processed/day_ahead_price.csv"
 print("Saving processed data to: ", output_path)

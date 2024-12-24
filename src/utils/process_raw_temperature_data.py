@@ -35,6 +35,15 @@ df["temperature"] = df["temperature"].bfill()
 print("Excluding day and hour duplicates (by keeping last)")
 df = df.drop_duplicates(subset=["date", "hour"], keep="last")
 
+df["ds"] = df.apply(
+    lambda row: datetime.strptime(
+        "{} {:02}:00:00".format(row["date"], row["hour"]),
+        "%Y-%m-%d %H:%M:%S",
+    ),
+    axis=1,
+)
+df = df[["ds", "temperature"]]
+
 output_path = f"{cwd}/data/processed/temperature.csv"
 print("Saving processed temperature data to: ", output_path)
 df.to_csv(output_path, index=False, sep=";")

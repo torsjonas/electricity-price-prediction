@@ -10,9 +10,10 @@ df = pl.read_csv(
 # Include features so that the time between the target price and each feature is at least 24 hours (the forecast horizon)
 lagged_df = df.select(
     "price",
+    "ds",
     *[
         pl.col("price").shift(i).alias(f"lagged_price_{i}h")
-        for i in [24, 24+1, 24+2, 24+3]
+        for i in [24, 24 + 1, 24 + 2, 24 + 3]
     ],
     lagged_price_7d=pl.col("price").shift(7 * 24),
     lagged_price_24h_mean_24h=pl.col("price").shift(24).rolling_mean(24),
@@ -31,7 +32,7 @@ lagged_df.to_pandas().to_csv(
 )
 
 max_train_size = 24 * 7 * 4  # one month of training data
-test_size = 24 * 7  # one week of test data
+test_size = 48  # two days of test
 n_splits = len(lagged_df) // (max_train_size + test_size)
 
 ts_cv = TimeSeriesSplit(
