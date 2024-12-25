@@ -1,4 +1,4 @@
-import numpy as np
+import pandas as pd
 class Naive:
     def __init__(self):
         pass
@@ -6,6 +6,6 @@ class Naive:
     def fit(self, X, y):
         pass 
 
-    def predict(self, X: np.ndarray) -> np.ndarray:
+    def predict(self, X: pd.DataFrame) -> pd.DataFrame:
         # For the naive forecast we predict the 24 lagged value, which is the first feature (column) of X.
-        return X[:, 0]
+        return X["lag_24h"].to_frame("y")

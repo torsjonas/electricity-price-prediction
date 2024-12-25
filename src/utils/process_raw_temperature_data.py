@@ -43,7 +43,9 @@ df["ds"] = df.apply(
     ),
     axis=1,
 )
-df = df[["ds", "temperature"]]
+df["y"] = df["temperature"]
+df = df[["ds", "y"]]
+df["unique_id"] = "temperature"
 
 processed_dir = f"{cwd}/data/processed"
 if not os.path.exists(processed_dir):

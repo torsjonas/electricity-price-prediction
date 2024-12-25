@@ -70,7 +70,9 @@ df["ds"] = df.apply(
     ),
     axis=1,
 )
-df = df[["ds", "price"]]
+df["y"] = df["price"]
+df = df[["ds", "y"]]
+df["unique_id"] = "day_ahead_price"
 
 processed_dir = f"{cwd}/data/processed"
 if not os.path.exists(processed_dir):

@@ -9,26 +9,24 @@ df = pl.read_csv(
 
 # Include features so that the time between the target price and each feature is at least 24 hours (the forecast horizon)
 lagged_df = df.select(
-    "price",
+    "y",
     "ds",
-    *[
-        pl.col("price").shift(i).alias(f"lagged_price_{i}h")
-        for i in [24, 24 + 1, 24 + 2, 24 + 3]
-    ],
-    lagged_price_7d=pl.col("price").shift(7 * 24),
-    lagged_price_24h_mean_24h=pl.col("price").shift(24).rolling_mean(24),
-    lagged_price_24h_mean_7d=pl.col("price").shift(24).rolling_mean(7 * 24),
+    "unique_id",
+    *[pl.col("y").shift(i).alias(f"lag_{i}h") for i in [24, 24 + 1, 24 + 2, 24 + 3]],
+    lag_7d=pl.col("y").shift(7 * 24),
+    lag_24h_mean_24h=pl.col("y").shift(24).rolling_mean(24),
+    lag_24h_mean_7d=pl.col("y").shift(24).rolling_mean(7 * 24),
 )
 # drop the nulls that resulted from lagging
 lagged_df = lagged_df.drop_nulls()
 
-lagged_features_dir = "data/lagged_features"
+lagged_features_dir = "data/lagged_price_features"
 if os.path.exists(lagged_features_dir):
     shutil.rmtree(lagged_features_dir)
 
 os.makedirs(lagged_features_dir)
 lagged_df.to_pandas().to_csv(
-    f"{lagged_features_dir}/lagged_features.csv", index=False, sep=";"
+    f"{lagged_features_dir}/lagged_price_features.csv", index=False, sep=";"
 )
 
 max_train_size = 24 * 7 * 4  # one month of training data
